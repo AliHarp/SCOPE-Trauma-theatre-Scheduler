@@ -31,7 +31,7 @@ from model import (
 
 class Report:
     """
-    Collect Plotly figures and emit a single self-contained HTML.
+    Collect Plotly figures and make a single self-contained HTML.
     Optionally also save each figure as its own HTML/PNG.
     """
     def __init__(self, out_dir: Path, *, open_in_browser: bool = False):

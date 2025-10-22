@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
+# VERSION 1 MODEL - NO ROLLING ROTA, NO ELECTIVES, NO DYNAMIC PI
 
 # # Scheduling model for hips and ambulatory surgery
 from __future__ import annotations
