@@ -25,7 +25,7 @@ class Config:
     base_seed: int = 1984
     warmup_days: int = 21 # allow build-up of amb patients
 
-    # ================= Capacity / arrivals =================
+    # ============== Capacity / arrivals =================
     # Number of sessions per day. 0 = Monday
     # Each instance gets its own new dictionary
     trauma_sessions_by_dow: Dict[int, float] = field(
@@ -42,7 +42,7 @@ class Config:
         }
     )
 
-    # ================= Case durations =================
+    # ================= Case durations ===================
     # mean, sd and min values (minutes)
     duration_params: Dict[str, Dict[str, float]] = field(
         default_factory=lambda: {
@@ -64,7 +64,7 @@ class Config:
         }
     )
 
-    # ================= Service policy =================
+    # ================= Service policy ========================
     # Up for discussion - edd is just weighted slack (time to deadline); 
     # pi includes expected (not sampled) duration - weighs longer surgeries as more urgent
     # hip can get a higher weight (denominator) so higher priority (lower edd/pi)
@@ -74,7 +74,7 @@ class Config:
         default_factory=lambda: {"hip": 2.0, "shoulder": 1.0, "wrist": 1.0, "ankle": 1.0}
     )
 
-    # ================= utils =======================
+    # ===================== utils =======================
     TRACE: bool = False
 
     def trace(self, *args, **kwargs) -> None:
@@ -162,7 +162,7 @@ class Config:
                 except Exception:
                     err(f"priority_weights[{k!r}] must be numeric, got {v!r}")
 
-        # -------------------- sessions / capacity --------------------
+        # -------------------- sessions / capacity -------------
         dbg("Checking session structure and minutes...")
         try:
             sessions_by_dow = self.get_sessions_by_dow()
@@ -188,7 +188,7 @@ class Config:
             err(f"get_session_minutes() failed: {e}")
             session_minutes = 0
 
-        # quick weekly capacity sanity check
+        # quick weekly capacity check
         try:
             sm = float(session_minutes(0)) if callable(session_minutes) else float(session_minutes)
             total_weekly_capacity = sum(float(sessions_by_dow.get(d, 0.0)) * sm for d in range(7))
@@ -243,7 +243,7 @@ class Config:
             err(f"get_iat_mean_per_day() failed: {e}")
             arrivals = {}
 
-        # -------------------- kinds alignment --------------------
+        # -------------------- kinds alignment ---------------
         dbg("Checking kind alignment between models...")
         kinds_from_dur = set(duration_model.keys())
         kinds_from_dead = set(deadlines_min.keys())
@@ -401,8 +401,6 @@ class Config:
         # avoids cross-correlation between processes
         tag = (hash(stream) & 0x7fffffff)
         return self.get_base_seed() + int(run_id) + tag
-
-
 
 
 # ## Daily planner
